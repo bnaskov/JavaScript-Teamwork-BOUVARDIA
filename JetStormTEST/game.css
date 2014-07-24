@@ -1,0 +1,7 @@
+canvas {
+    display: block;
+}
+
+#canvasJet, #canvasEnemy, #canvasHUD {
+    margin: -600px 0 0;
+}
