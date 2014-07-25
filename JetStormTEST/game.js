@@ -140,7 +140,7 @@ function Jet() {
     this.srcY = 600;
     this.width = 135;
     this.height = 65;
-    this.speed = 2;
+    this.speed = 3;
     this.drawX = 220;
     this.drawY = 200;
     this.noseX = this.drawX + 100;
@@ -249,12 +249,12 @@ Jet.prototype.returnSrcX = function(){
 
 function Bullet(j) {
     this.jet = j;
-    this.srcX = 320;
+    this.srcX = 360;
     this.srcY = 600;
     this.drawX = -20;
     this.drawY = 0;
-    this.width = 10;
-    this.height = 10;
+    this.width = 15;
+    this.height = 15;
     this.explosion = new Explosion();
 }
 
@@ -304,8 +304,8 @@ function Explosion() {
     this.srcY = 600;
     this.drawX = 0;
     this.drawY = 0;
-    this.width = 50;
-    this.height = 50;
+    this.width = 90;
+    this.height = 85;
     this.hasHit = false;
     this.currentFrame = 0;
     this.totalFrames = 10;

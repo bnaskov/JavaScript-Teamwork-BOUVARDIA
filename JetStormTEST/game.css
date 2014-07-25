@@ -1,7 +1,17 @@
-canvas {
-    display: block;
+body{
+    background-color: #303030;
 }
 
+
+canvas {
+    display: block;
+    margin: 100px auto 0;
+}
+
+canvas:first-of-type{
+    border: 3px solid #969A9F;
+    box-shadow: 0px 0px 20px#969A9F;
+}
 #canvasJet, #canvasEnemy, #canvasHUD {
-    margin: -600px 0 0;
+    margin: -600px auto 0;
 }
