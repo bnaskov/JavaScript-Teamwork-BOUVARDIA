@@ -181,7 +181,7 @@ function leftFun(){
     if(jet1.srcX==100*6){
         clearInterval(rotateInterval);
         isTrue=false;
-        checkRight++;
+        checkLeft++;
     }
 }
 
@@ -191,7 +191,7 @@ function getText() {
         rotateInterval=setInterval(rightFun,85);
     }
     else if(text==='left'){
-
+        rotateInterval=setInterval(leftFun,85);
     }
     else{
         moveFun(text);
