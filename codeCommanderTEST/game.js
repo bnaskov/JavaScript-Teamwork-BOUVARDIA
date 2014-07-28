@@ -150,7 +150,7 @@ function rightFun(){
 }
 
 function leftFun(){
-    switch (checkRight){
+    switch (checkLeft){
         case 2:
             if(isTrue){
                 break;
