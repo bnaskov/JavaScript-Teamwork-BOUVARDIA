@@ -10,7 +10,7 @@ canvas {
 
 canvas:first-of-type{
     border: 3px solid #969A9F;
-    box-shadow: 0px 0px 20px#969A9F;
+    box-shadow: 0px 0px 20px#969A9E;
 }
 #canvasJet, #canvasEnemy, #canvasHUD {
     margin: -600px auto 0;
