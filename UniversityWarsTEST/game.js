@@ -169,6 +169,7 @@ Jet.prototype.draw = function() {
     this.checkDirection();
     this.checkShooting();
     this.drawAllBullets();
+    this.checkCollision();
     ctxJet.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
 
@@ -229,8 +230,23 @@ Jet.prototype.returnSrcX = function(){
     this.srcX=0;
 }
 
-// end of jet functions
+Jet.prototype.checkCollision = function() {
+    for (var i = 0; i < enemies.length; i++) {
+        if (this.rightX-15 >= enemies[i].drawX &&
+            this.leftX <=  enemies[i].drawX + enemies[i].width &&
+        ( this.topY+5 >= enemies[i].drawY &&
+            this.topY+5 <= enemies[i].drawY + enemies[i].height ||
+            this.bottomY-5 >= enemies[i].drawY &&
+            this.bottomY-5 <= enemies[i].drawY + enemies[i].height)){
+            alert('collision');
+            this.recycle();
+            enemies[i].recycleEnemy();
+            this.jet.updateScore(enemies[i].rewardPoints);
+        }
+    }
+};
 
+// end of jet functions
 
 
 
