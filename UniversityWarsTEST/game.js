@@ -6,7 +6,7 @@ var canvasEnemy = document.getElementById('canvasEnemy');
 var ctxEnemy = canvasEnemy.getContext('2d');
 var canvasHUD = document.getElementById('canvasHUD');
 var ctxHUD = canvasHUD.getContext('2d');
-ctxHUD.fillStyle = "hsla(212, 98%, 34%, 0.7)";
+ctxHUD.fillStyle = "hsla(212, 98%, 94%, 0.7)";
 ctxHUD.font = "bold 20px Arial";
 
 var jet1 = new Jet();
