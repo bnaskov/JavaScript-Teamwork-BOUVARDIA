@@ -6,8 +6,6 @@ var canvasEnemy = document.getElementById('canvasEnemy');
 var ctxEnemy = canvasEnemy.getContext('2d');
 var canvasHUD = document.getElementById('canvasHUD');
 var ctxHUD = canvasHUD.getContext('2d');
-ctxHUD.fillStyle = "hsla(212, 98%, 94%, 0.7)";
-ctxHUD.font = "bold 20px Arial";
 
 var jet1 = new Jet();
 var btnPlay = new Button(331, 569, 261, 349);
@@ -18,6 +16,7 @@ var bgDrawX2 = 1600;
 var mouseX = 0;
 var mouseY = 0;
 var isPlaying = false;
+var checkLife = false;
 var requestAnimFrame =  window.requestAnimationFrame ||
                         window.webkitRequestAnimationFrame ||
                         window.mozRequestAnimationFrame ||
@@ -110,9 +109,16 @@ function moveBg() {
     drawBg();
 }
 
+function updateHUDValues(){
+    ctxHUD.fillStyle = "hsla(212, 98%, 94%, 0.7)";
+    ctxHUD.font = "bold 20px Arial";
+}
+
 function updateHUD() {
+    updateHUDValues();
     ctxHUD.clearRect(0, 0, gameWidth, gameHeight);
-    ctxHUD.fillText("Score: " +  jet1.score, 680, 30);
+    ctxHUD.fillText("Score: " +  jet1.score, 750, 30);
+    ctxHUD.fillText("Lifes: " + jet1.lifes, 50,30);
 }
 // end of main functions
 
@@ -161,6 +167,7 @@ function Jet() {
         this.bullets[this.bullets.length] = new Bullet(this);
     }
     this.score = 0;
+    this.lifes = 3;
 }
 
 Jet.prototype.draw = function() {
@@ -170,6 +177,8 @@ Jet.prototype.draw = function() {
     this.checkShooting();
     this.drawAllBullets();
     this.checkCollision();
+    this.updateLifes();
+    this.checkLifes();
     ctxJet.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
 
@@ -228,7 +237,7 @@ function clearCtxJet() {
 
 Jet.prototype.returnSrcX = function(){
     this.srcX=0;
-}
+};
 
 Jet.prototype.checkCollision = function() {
     for (var i = 0; i < enemies.length; i++) {
@@ -238,11 +247,45 @@ Jet.prototype.checkCollision = function() {
             this.topY+5 <= enemies[i].drawY + enemies[i].height ||
             this.bottomY-5 >= enemies[i].drawY &&
             this.bottomY-5 <= enemies[i].drawY + enemies[i].height)){
-            alert('collision');
-            this.recycle();
-            enemies[i].recycleEnemy();
-            this.jet.updateScore(enemies[i].rewardPoints);
+            stopLoop();
+            checkLife = true;
         }
+    }
+};
+
+Jet.prototype.updateLifes = function(){
+    if(checkLife){
+        this.lifes = this.lifes - 1;
+        checkLife = false;
+        enemies = [];
+        this.drawX = 220;
+        this.drawY = 200;
+        clearCtxEnemy();
+        clearCtxJet();
+        setTimeout(function(){
+            playGame();
+            spawnEnemy(5);
+        },100);
+    }
+
+
+};
+
+
+Jet.prototype.checkLifes = function(){
+    if(this.lifes===0){
+        ctxHUD.clearRect(0, 0, gameWidth, gameHeight);
+        stopLoop();
+        clearCtxEnemy();
+        clearCtxJet();
+        ctxHUD.fillStyle = "hsla(357, 87%, 57%, 0.7)";
+        ctxHUD.font = "bold 50px Arial";
+        ctxHUD.fillText("GAME OVER",300,250);
+
+        ctxHUD.fillStyle = "hsla(264, 100%, 50%, 0.7)";
+        ctxHUD.font = "bold 40px Arial";
+        ctxHUD.fillText("Score: " + jet1.score,360,300);
+        this.recycle();
     }
 };
 
@@ -425,6 +468,7 @@ function mouseClicked(e) {
     mouseY = e.pageY - canvasBg.offsetTop;
     if (!isPlaying) {
         if (btnPlay.checkClicked()) {
+            jet1.lifes = 3;
             setTimeout(function(){
                 playGame()
             },50);
