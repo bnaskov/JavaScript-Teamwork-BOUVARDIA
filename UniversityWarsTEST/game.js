@@ -32,16 +32,6 @@ imgSprite.src = 'images/sprite.png';
 imgSprite.addEventListener('load', init, false);
 
 
-
-
-
-
-
-
-
-
-
-
 // main functions
 
 //draws the menu
@@ -137,26 +127,17 @@ function startTime() {
     }
 }
 
-// info function(lifes counter,timer,score)
+// info function(lives counter,timer,score)
 
 function updateHUD() {
     updateHUDValues();
     ctxHUD.clearRect(0, 0, gameWidth, gameHeight);
     ctxHUD.fillText("Score: " +  jet1.score, 750, 30);
-    ctxHUD.fillText("Lifes: " + jet1.lifes, 50,30);
+    ctxHUD.fillText("Lives: " + jet1.lifes, 50,30);
     ctxHUD.fillText("Level up in: " + counter + " seconds",300,30);
     ctxHUD.fillText("Level: " + level,50,60);
 }
 // end of main functions
-
-
-
-
-
-
-
-
-
 
 
 // jet functions
@@ -295,13 +276,11 @@ Jet.prototype.updateLifes = function(){
             spawnEnemy(level+4);
         },500);
     }
-
-
 };
 
 
-// lifes counter function
-// if lifes = 0 the game stops
+// lives counter function
+// if lives = 0 the game stops
 
 Jet.prototype.checkLifes = function(){
     if(this.lifes===0){
@@ -329,18 +308,6 @@ Jet.prototype.checkLifes = function(){
 // end of jet functions
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // bullet functions
 
 function Bullet(j) {
@@ -355,7 +322,7 @@ function Bullet(j) {
 }
 
 Bullet.prototype.draw = function() {
-    this.drawX += 3;
+    this.drawX += 10;
     ctxJet.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
     this.checkHitEnemy();
     if (this.drawX > gameWidth) this.recycle();
@@ -392,7 +359,6 @@ Bullet.prototype.recycle = function() {
     this.drawX = -20;
 };
 
-
 // end of bullet functions
 
 
@@ -423,16 +389,6 @@ Explosion.prototype.draw = function() {
 
 
 // end of explosion functions
-
-
-
-
-
-
-
-
-
-
 
 
 // enemy functions
@@ -475,10 +431,6 @@ function clearCtxEnemy() {
 // end enemy functions
 
 
-
-
-
-
 // button functions
 
 function Button(xL, xR, yT, yB) {
@@ -496,12 +448,6 @@ Button.prototype.checkClicked = function() {
 };
 
 // end of button functions
-
-
-
-
-
-
 
 
 // event functions
