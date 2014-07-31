@@ -49,7 +49,6 @@ imgSprite.addEventListener('load', init, false);
 function init() {
     spawnEnemy(level+4);
     drawMenu();
-    var tt=setInterval(function(){startTime()},1000);
     document.addEventListener('click', mouseClicked, false);
 }
 
@@ -293,7 +292,7 @@ Jet.prototype.updateLifes = function(){
         setTimeout(function(){
             playGame();
             spawnEnemy(level+4);
-        },500);
+        },700);
     }
 
 
@@ -491,6 +490,7 @@ function Button(xL, xR, yT, yB) {
 Button.prototype.checkClicked = function() {
     if (this.xLeft <= mouseX && mouseX <= this.xRight && this.yTop <= mouseY && mouseY <= this.yBottom) {
         ctxBg.drawImage(imgSprite, 387, 618, 238, 88, 331, 261, 238, 88);
+        var timer = setInterval(function(){startTime()},1000);
         return true;
     }
 };
