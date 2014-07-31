@@ -4,6 +4,8 @@ var canvasJet = document.getElementById('canvasJet');
 var ctxJet = canvasJet.getContext('2d');
 var canvasEnemy = document.getElementById('canvasEnemy');
 var ctxEnemy = canvasEnemy.getContext('2d');
+var canvasBonus = document.getElementById('canvasBonus');
+var ctxBonus = canvasBonus.getContext('2d');
 var canvasHUD = document.getElementById('canvasHUD');
 var ctxHUD = canvasHUD.getContext('2d');
 
@@ -26,7 +28,6 @@ var requestAnimFrame =  window.requestAnimationFrame ||
                             window.setTimeout(callback, 1000 / 60);
                         };
 var enemies = [];
-var speedPlus = 0;
 var imgSprite = new Image();
 imgSprite.src = 'images/sprite.png';
 imgSprite.addEventListener('load', init, false);
@@ -64,6 +65,11 @@ function drawAllEnemies() {
         enemies[i].draw();
     }
 }
+var bonus = new Bonus();
+function drawBonuses(){
+        clearCtxBonus();
+        bonus.draw();
+}
 
 function loop() {
     if (isPlaying) {
@@ -71,6 +77,7 @@ function loop() {
         updateHUD();
         jet1.draw();
         drawAllEnemies();
+        drawBonuses();
         requestAnimFrame(loop);
     }
 }
@@ -389,12 +396,59 @@ Explosion.prototype.draw = function() {
 
 // end of explosion functions
 
+// bonus functions
+
+function Bonus(){
+    this.srcX = 215;
+    this.srcY = 674;
+    this.width = 54;
+    this.height = 54;
+    this.speed = 3;
+    this.drawX = Math.floor(Math.random() * 1000) + gameWidth;
+    this.drawY = Math.floor(Math.random() * 500);
+}
+
+Bonus.prototype.draw = function() {
+    this.drawX -= this.speed;
+    ctxBonus.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
+    this.checkGet();
+    this.checkEscaped();
+};
+
+Bonus.prototype.checkEscaped = function() {
+    if (this.drawX + this.width <= 0) {
+        this.recycleBonus();
+    }
+};
+
+Bonus.prototype.recycleBonus = function() {
+    this.drawX = Math.floor(Math.random() * 1000) + gameWidth;
+    this.drawY = Math.floor(Math.random() * 360);
+};
+
+Bonus.prototype.checkGet = function() {
+    if (jet1.rightX-15 >= this.drawX &&
+        jet1.leftX <=  this.drawX + this.width &&
+        ( jet1.topY+5 >= this.drawY &&
+            jet1.topY+5 <= this.drawY + this.height ||
+            jet1.bottomY-5 >= this.drawY &&
+            jet1.bottomY-5 <= this.drawY + this.height)){
+        this.recycleBonus();
+        jet1.lifes += 1;
+    }
+};
+
+function clearCtxBonus() {
+    ctxBonus.clearRect(0, 0, gameWidth, gameHeight);
+}
+
+
 
 // enemy functions
 
 function Enemy() {
     var srcXArray=[0,70,140];
-    this.srcX = srcXArray[Math.floor(Math.random()*srcXArray.length)]
+    this.srcX = srcXArray[Math.floor(Math.random()*srcXArray.length)];
     this.srcY = 665;
     this.width = 70;
     this.height = 70;
