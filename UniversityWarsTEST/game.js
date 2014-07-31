@@ -26,6 +26,7 @@ var requestAnimFrame =  window.requestAnimationFrame ||
                             window.setTimeout(callback, 1000 / 60);
                         };
 var enemies = [];
+var speedPlus = 0;
 var imgSprite = new Image();
 imgSprite.src = 'images/sprite.png';
 imgSprite.addEventListener('load', init, false);
@@ -43,23 +44,28 @@ imgSprite.addEventListener('load', init, false);
 
 // main functions
 
+//draws the menu
+
 function init() {
-    spawnEnemy(5);
+    spawnEnemy(level+4);
     drawMenu();
+    var tt=setInterval(function(){startTime()},1000);
     document.addEventListener('click', mouseClicked, false);
 }
+
 
 function playGame() {
     drawBg();
     startLoop();
-    updateHUD();
     document.addEventListener('keydown', checkKeyDown, false);
     document.addEventListener('keyup', checkKeyUp, false);
 }
 
 function spawnEnemy(number) {
     for (var i = 0; i < number; i++) {
-        enemies[enemies.length] = new Enemy();
+        var enemy = new Enemy();
+        enemy.speed += speedChange;
+        enemies[enemies.length] = enemy;
     }
 }
 
@@ -73,6 +79,7 @@ function drawAllEnemies() {
 function loop() {
     if (isPlaying) {
         moveBg();
+        updateHUD();
         jet1.draw();
         drawAllEnemies();
         requestAnimFrame(loop);
@@ -114,20 +121,33 @@ function updateHUDValues(){
     ctxHUD.font = "bold 20px Arial";
 }
 
+var counter = 20;
+var speedChange = 0;
+var level = 1;
+
+function startTime() {
+    if (counter === 0) {
+        enemies = [];
+        counter = 20;
+        speedChange += 2;
+        level++;
+        spawnEnemy(level+4);
+    } else {
+        counter--;
+    }
+}
+
+// info function(lifes counter,timer,score)
+
 function updateHUD() {
     updateHUDValues();
     ctxHUD.clearRect(0, 0, gameWidth, gameHeight);
     ctxHUD.fillText("Score: " +  jet1.score, 750, 30);
     ctxHUD.fillText("Lifes: " + jet1.lifes, 50,30);
+    ctxHUD.fillText("Level up in: " + counter + " seconds",300,30);
+    ctxHUD.fillText("Level: " + level,50,60);
 }
 // end of main functions
-
-
-
-
-
-
-
 
 
 
@@ -181,6 +201,8 @@ Jet.prototype.draw = function() {
     this.checkLifes();
     ctxJet.drawImage(imgSprite, this.srcX, this.srcY, this.width, this.height, this.drawX, this.drawY, this.width, this.height);
 };
+
+//jet coordinates update
 
 Jet.prototype.updateCoors = function() {
     this.noseX = this.drawX + 130;
@@ -253,24 +275,33 @@ Jet.prototype.checkCollision = function() {
     }
 };
 
+//when there is collision between the jet and an enemy this function is called
+
 Jet.prototype.updateLifes = function(){
     if(checkLife){
         this.lifes = this.lifes - 1;
         checkLife = false;
         enemies = [];
+        counter = 20;
+        for(var i = 0;i<this.bullets.length;i++){
+            this.bullets[i].recycle();
+        }
         this.drawX = 220;
         this.drawY = 200;
         clearCtxEnemy();
         clearCtxJet();
         setTimeout(function(){
             playGame();
-            spawnEnemy(5);
-        },100);
+            spawnEnemy(level+4);
+        },500);
     }
 
 
 };
 
+
+// lifes counter function
+// if lifes = 0 the game stops
 
 Jet.prototype.checkLifes = function(){
     if(this.lifes===0){
@@ -284,7 +315,13 @@ Jet.prototype.checkLifes = function(){
 
         ctxHUD.fillStyle = "hsla(264, 100%, 50%, 0.7)";
         ctxHUD.font = "bold 40px Arial";
-        ctxHUD.fillText("Score: " + jet1.score,360,300);
+        ctxHUD.fillText("Level: " + level,360,300);
+
+        ctxHUD.fillStyle = "hsla(264, 100%, 50%, 0.7)";
+        ctxHUD.font = "bold 40px Arial";
+        ctxHUD.fillText("Score: " + jet1.score,360,350);
+
+
         this.recycle();
     }
 };
@@ -329,6 +366,8 @@ Bullet.prototype.fire = function(startX, startY) {
     this.drawY = startY;
 };
 
+//checks for collision between bullet and enemy(if coordinates are equal)
+
 Bullet.prototype.checkHitEnemy = function() {
     for (var i = 0; i < enemies.length; i++) {
         if (this.drawX >= enemies[i].drawX &&
@@ -346,6 +385,8 @@ Bullet.prototype.checkHitEnemy = function() {
         }
     }
 };
+
+//removes bullets after they hit the enemy
 
 Bullet.prototype.recycle = function() {
     this.drawX = -20;
@@ -404,7 +445,7 @@ function Enemy() {
     this.height = 70;
     this.speed = 2;
     this.drawX = Math.floor(Math.random() * 1000) + gameWidth;
-    this.drawY = Math.floor(Math.random() * 360);
+    this.drawY = Math.floor(Math.random() * 500);
     this.rewardPoints = 5;
 
 }
@@ -425,6 +466,7 @@ Enemy.prototype.recycleEnemy = function() {
     this.drawX = Math.floor(Math.random() * 1000) + gameWidth;
     this.drawY = Math.floor(Math.random() * 360);
 };
+
 
 function clearCtxEnemy() {
     ctxEnemy.clearRect(0, 0, gameWidth, gameHeight);
