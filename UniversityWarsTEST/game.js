@@ -29,6 +29,7 @@ var requestAnimFrame =  window.requestAnimationFrame ||
                         };
 var enemies = [];
 var imgSprite = new Image();
+var drawBonus = false;
 imgSprite.src = 'images/sprite.png';
 imgSprite.addEventListener('load', init, false);
 
@@ -66,6 +67,7 @@ function drawAllEnemies() {
     }
 }
 var bonus = new Bonus();
+var interval = setInterval(function(){drawBonus = true;},20000);
 function drawBonuses(){
         clearCtxBonus();
         bonus.draw();
@@ -76,8 +78,11 @@ function loop() {
         moveBg();
         updateHUD();
         jet1.draw();
+        if(drawBonus){
+            drawBonuses();
+        }
         drawAllEnemies();
-        drawBonuses();
+
         requestAnimFrame(loop);
     }
 }
@@ -434,7 +439,15 @@ Bonus.prototype.checkGet = function() {
             jet1.bottomY-5 >= this.drawY &&
             jet1.bottomY-5 <= this.drawY + this.height)){
         this.recycleBonus();
+        setTimeout(function(){drawBonus = false;},50);
         jet1.lifes += 1;
+    }
+};
+
+Bonus.prototype.checkEscaped = function() {
+    if (this.drawX + this.width <= 0) {
+        drawBonus = false;
+        this.recycleBonus();
     }
 };
 
